@@ -23,7 +23,9 @@ def clean_doc(doc):
 	# 按照空格分词
 	tokens = doc.split()
 	# 删除文本中的标点符号
+    # table是生成的字符映射规则，规则为将标点符号映射为空字符->''
 	table = str.maketrans('', '', punctuation)
+    # 根据生成的映射规则table，对tokens中每个单词进行转义映射
 	tokens = [w.translate(table) for w in tokens]
 	# 删除非字母字符
 	tokens = [word for word in tokens if word.isalpha()]
@@ -40,7 +42,7 @@ def doc_to_line(filename, vocab):
 	doc = load_doc(filename)
 	# 清理文本，转化成词列表
 	tokens = clean_doc(doc)
-	# 使用统计的高频词列表，过滤文本中的低频单词
+	# 使用统计的高频词列表vocab，过滤文本中的低频单词
 	tokens = [w for w in tokens if w in vocab]
     #用空格链接单词
 	return ' '.join(tokens)
@@ -57,9 +59,9 @@ def process_docs(directory, vocab, is_trian):
 			continue
 		# create the full path of the file to open
 		path = directory + '/' + filename
-		# 用高频词汇列表vocab，处理每个评论文本
+		# 用高频词汇列表vocab，处理后的单个评论文本内容
 		line = doc_to_line(path, vocab)
-		# 将处理后的文本加入列表
+		# 将处理后的评论文本加入列表
 		lines.append(line)
 	return lines
 
@@ -71,14 +73,15 @@ vocab = set(vocab)
 # 用词汇列表过滤和拼接 训练 数据
 positive_lines = process_docs(r'E:\临时测试程序\pytest\txt_sentoken\pos', vocab, True)
 negative_lines = process_docs(r'E:\临时测试程序\pytest\txt_sentoken\neg', vocab, True)
-# create the tokenizer
-tokenizer = Tokenizer()
 # 将处理过的训练数据集组合起来
 docs = negative_lines + positive_lines
-# 使tokenizer对象识别要编码的数据类型
+
+# 创建一个分词器
+tokenizer = Tokenizer()
+# 使tokenizer对象识别要编码的数据信息，生成一个编码器
 tokenizer.fit_on_texts(docs)
 
-# 将训练文本编码为矩阵，编码规则为按照词频编码
+# 将训练文本编码为矩阵(one-hot code)，编码规则为按照词频编码
 Xtrain = tokenizer.texts_to_matrix(docs, mode='freq')
 # 测试集前900负面数据标记位0，后900正面数据标记位1
 ytrain = array([0 for _ in range(900)] + [1 for _ in range(900)])

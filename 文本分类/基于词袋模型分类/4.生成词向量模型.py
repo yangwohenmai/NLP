@@ -41,21 +41,21 @@ def doc_to_line(filename, vocab):
     #用空格链接单词
 	return ' '.join(tokens)
 
-# load all docs in a directory
+# 加载训练集/测试集
 def process_docs(directory, vocab, is_trian):
 	lines = list()
-	# walk through all files in the folder
+	# 遍历文件夹
 	for filename in listdir(directory):
-		# skip any reviews in the test set
+		# 根据参数选择加载的数据集
 		if is_trian and filename.startswith('cv9'):
 			continue
 		if not is_trian and not filename.startswith('cv9'):
 			continue
 		# create the full path of the file to open
 		path = directory + '/' + filename
-		# load and clean the doc
+		# # 用高频词汇列表vocab，处理后的单个评论文本内容
 		line = doc_to_line(path, vocab)
-		# add to list
+		# 将处理后的文本加入列表
 		lines.append(line)
 	return lines
 
@@ -68,11 +68,11 @@ vocab = set(vocab)
 # 用词汇列表过滤和拼接训练数据
 positive_lines = process_docs(r'E:\临时测试程序\pytest\txt_sentoken\pos', vocab, True)
 negative_lines = process_docs(r'E:\临时测试程序\pytest\txt_sentoken\neg', vocab, True)
-
-# create the tokenizer
-tokenizer = Tokenizer()
-# 将文本适配成tokenizer类型
 docs = negative_lines + positive_lines
+
+# 创建一个分词器
+tokenizer = Tokenizer()
+# 使tokenizer对象识别要编码的数据信息，生成一个编码器
 tokenizer.fit_on_texts(docs)
 
 # 将文本编码为矩阵，编码规则为按照词频转换
