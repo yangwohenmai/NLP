@@ -68,23 +68,22 @@ words = list(model.wv.vocab)
 print('Vocabulary size: %d' % len(words))
 
 # 保存训练的词向量文件
-filename = 'embedding_word2vec.txt'
+filename = r'E:\MyGit\NLP\文本分类\基于word2vec词向量分类\embedding_word2vec.txt'
 model.wv.save_word2vec_format(filename, binary=False)
 
 
-
 ## 对训练的model做出散点图
-## 获取训练好的所有单词的向量
-#X = model[model.wv.vocab]
-## 定义二维坐标
-#pca = PCA(n_components=2)
-## 对单词向量进行PCA转义
-#result = pca.fit_transform(X)
-## 创建投影的散点图
-#pyplot.scatter(result[:, 0], result[:, 1])
-## 获取词向量列表
-#words = list(model.wv.vocab)
-## 给词向量散点图上的点，匹配对应的文字
-#for i, word in enumerate(words):
-#	pyplot.annotate(word, xy=(result[i, 0], result[i, 1]))
-#pyplot.show()
+# 获取训练好的所有单词的向量（此处只对前30个点处理）
+X = model[model.wv.vocab][0:30]
+# 定义二维坐标
+pca = PCA(n_components=2)
+# 对单词向量进行PCA转义
+result = pca.fit_transform(X)
+# 创建投影的散点图
+pyplot.scatter(result[:, 0], result[:, 1])
+# 获取词向量列表（此处只对前30个点处理）
+words = list(model.wv.vocab)[0:30]
+# 给词向量散点图上的点，匹配对应的文字
+for i, word in enumerate(words):
+	pyplot.annotate(word, xy=(result[i, 0], result[i, 1]))
+pyplot.show()
