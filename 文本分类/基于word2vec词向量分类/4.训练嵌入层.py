@@ -1,3 +1,4 @@
+#code=utf-8
 from string import punctuation
 from os import listdir
 from numpy import array
@@ -105,6 +106,7 @@ negative_docs = process_docs(r'E:\MyGit\NLP\文本分类\基于word2vec词向量
 test_docs = negative_docs + positive_docs
 
 # sequence encode对文本单词进行索引编码，把文本中每一个单词对应一个整数索引
+# 使用训练集的tokenizer分词器，来编码测试集文本
 encoded_docs = tokenizer.texts_to_sequences(test_docs)
 # 对编码后的文本列表中不同长度的句子，用0填充到相同长度
 Xtest = pad_sequences(encoded_docs, maxlen=max_length, padding='post')

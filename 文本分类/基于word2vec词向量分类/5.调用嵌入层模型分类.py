@@ -90,7 +90,7 @@ negative_docs = process_docs(r'E:\MyGit\NLP\文本分类\基于word2vec词向量
 test_docs = negative_docs + positive_docs
 
 # sequence encode对文本单词进行索引编码，把文本中每一个单词对应一个整数索引
-# 用训练集的tokenizer分词器来编码测试集文本
+# 使用训练集的tokenizer分词器，来编码测试集文本
 encoded_docs = tokenizer.texts_to_sequences(test_docs)
 # 对编码后的文本列表中不同长度的句子，用0填充到相同长度
 Xtest = pad_sequences(encoded_docs, maxlen=max_length, padding='post')
@@ -105,7 +105,7 @@ model = Sequential()
 # 词嵌入层作为第一个隐藏层。参数：词汇量大小，实值向量空间大小，输入文本最大长度
 model.add(Embedding(vocab_size, 100, input_length=max_length))
 # 使用一维CNN卷积神经网络，32个滤波器，激活函数为relu
-model.add(Conv1D(filters=32, kernel_size=8, activation='relu'))
+model.add(Conv1D(filters=32, kernel_size=4, activation='relu'))
 # 池化层
 model.add(MaxPooling1D(pool_size=2))
 # 将CNN输出的2D输出展平为一个长2D矢量，以表示由CNN提取的“特征”
