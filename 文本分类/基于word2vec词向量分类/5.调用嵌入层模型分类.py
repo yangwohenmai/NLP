@@ -21,7 +21,7 @@ def load_doc(filename):
 	file.close()
 	return text
 
-# 对文本进行清洗和格式化
+# 对文本进行清洗和格式化方法
 def clean_doc(doc, vocab):
 	# 按照空格分词
 	tokens = doc.split()
@@ -36,7 +36,7 @@ def clean_doc(doc, vocab):
 	tokens = ' '.join(tokens)
 	return tokens
 
-# load all docs in a directory
+# 文本清洗
 def process_docs(directory, vocab, is_trian):
 	documents = list()
 	# 遍历文件夹下文本文件
@@ -104,7 +104,7 @@ vocab_size = len(tokenizer.word_index) + 1
 model = Sequential()
 # 词嵌入层作为第一个隐藏层。参数：词汇量大小，实值向量空间大小，输入文本最大长度
 model.add(Embedding(vocab_size, 100, input_length=max_length))
-# 使用一维CNN卷积神经网络，32个滤波器，激活函数为relu
+# 使用一维CNN卷积神经网络，32个滤波器，激活函数为relu，计算机4核设定
 model.add(Conv1D(filters=32, kernel_size=4, activation='relu'))
 # 池化层
 model.add(MaxPooling1D(pool_size=2))
@@ -124,7 +124,7 @@ model.fit(Xtrain, ytrain, epochs=10, verbose=2)
 loss, acc = model.evaluate(Xtest, ytest, verbose=0)
 print('Test Accuracy: %f' % (acc*100))
 
-
+# 调用训练的模型进行分类测试
 # test positive text
 text = 'best movie ever! i like it very much, haha'
 line = clean_doc(text,vocab)
