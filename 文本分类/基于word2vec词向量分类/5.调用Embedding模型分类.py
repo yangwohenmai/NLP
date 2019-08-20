@@ -104,7 +104,8 @@ vocab_size = len(tokenizer.word_index) + 1
 model = Sequential()
 # 词嵌入层作为第一个隐藏层。参数：词汇量大小，实值向量空间大小，输入文本最大长度
 model.add(Embedding(vocab_size, 100, input_length=max_length))
-# 使用一维CNN卷积神经网络，32个滤波器，激活函数为relu，计算机4核设定
+# 使用一维CNN卷积神经网络，32个滤波器，激活函数为relu，卷积核数量为4
+# 一维卷积一般会处理时序数据，所以，卷积核的宽度为1，kernel_size是卷积核的长度
 model.add(Conv1D(filters=32, kernel_size=4, activation='relu'))
 # 池化层
 model.add(MaxPooling1D(pool_size=2))

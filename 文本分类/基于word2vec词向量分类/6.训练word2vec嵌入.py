@@ -3,6 +3,12 @@ from os import listdir
 from gensim.models import Word2Vec
 from sklearn.decomposition import PCA
 from matplotlib import pyplot
+"""
+生成的work2vec文件是给每个单词生成一个n维向量，如：
+film[11,22,33,44,55....,99]
+good[33,44,55,66,77....,99]
+将每个单词都映射成一个n维向量
+"""
 
 # 加载文件
 def load_doc(filename):
@@ -60,7 +66,7 @@ negative_docs = process_docs(r'E:\MyGit\NLP\文本分类\基于word2vec词向量
 sentences = negative_docs + positive_docs
 print('训练数据总数量为: %d' % len(sentences))
 
-# 训练 word2vec 模型
+# 训练 word2vec 模型,size=100表示每个词对应的向量为100维
 model = Word2Vec(sentences, size=100, window=5, workers=8, min_count=1)
 
 # 统计模型中的词向量数量
