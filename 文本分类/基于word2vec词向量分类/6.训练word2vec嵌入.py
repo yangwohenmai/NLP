@@ -4,6 +4,7 @@ from gensim.models import Word2Vec
 from sklearn.decomposition import PCA
 from matplotlib import pyplot
 """
+通过对测试数据训练，生成词向量文件work2vec
 生成的work2vec文件是给每个单词生成一个n维向量，如：
 film[11,22,33,44,55....,99]
 good[33,44,55,66,77....,99]
