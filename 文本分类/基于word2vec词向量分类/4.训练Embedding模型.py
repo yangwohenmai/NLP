@@ -10,7 +10,10 @@ from keras.layers import Flatten
 from keras.layers import Embedding
 from keras.layers.convolutional import Conv1D
 from keras.layers.convolutional import MaxPooling1D
+"""
+本文训练一个简单的Embedding层
 
+"""
 # 加载文件
 def load_doc(filename):
 	# open the file as read only
@@ -71,10 +74,11 @@ train_docs = negative_docs + positive_docs
 
 # 创建一个分词器
 tokenizer = Tokenizer()
-# 使tokenizer对象识别要编码的数据信息，生成一个编码器
+# 使tokenizer对象对于文本中每个单词进行编码，每个单词对应一个数字
 tokenizer.fit_on_texts(train_docs)
 
-# sequence encode对文本单词进行索引编码，把文本中每一个单词对应一个整数索引
+# 对文本单词进行索引编码，把文本中每一个单词转化成一个整数，文本变成了数字序列
+# 12,3,23,45,23,45
 encoded_docs = tokenizer.texts_to_sequences(train_docs)
 # 获取列表中最大句子长度
 max_length = max([len(s.split()) for s in train_docs])
@@ -89,7 +93,8 @@ positive_docs = process_docs(r'E:\MyGit\NLP\文本分类\基于word2vec词向量
 negative_docs = process_docs(r'E:\MyGit\NLP\文本分类\基于word2vec词向量分类\txt_sentoken/neg', vocab, False)
 test_docs = negative_docs + positive_docs
 
-# sequence encode对文本单词进行索引编码，把文本中每一个单词对应一个整数索引
+# 对文本单词进行索引编码，把文本中每一个单词转化成一个整数，文本变成了数字序列
+# 句子变成了数字序列：12,3,23,45,23,45
 # 使用训练集的tokenizer分词器，来编码测试集文本
 encoded_docs = tokenizer.texts_to_sequences(test_docs)
 # 对编码后的文本列表中不同长度的句子，用0填充到相同长度
@@ -104,7 +109,8 @@ vocab_size = len(tokenizer.word_index) + 1
 model = Sequential()
 # 词嵌入层作为第一个隐藏层。参数：词汇量大小，实值向量空间大小，输入文本最大长度
 model.add(Embedding(vocab_size, 100, input_length=max_length))
-# 使用一维CNN卷积神经网络，32个滤波器，激活函数为relu，计算机8核设定
+# 使用一维CNN卷积神经网络，32个滤波器，激活函数为relu，卷积核数量为8
+# 一维卷积一般会处理时序数据，所以，卷积核的宽度为1，kernel_size是卷积核的长度
 model.add(Conv1D(filters=32, kernel_size=8, activation='relu'))
 # 池化层
 model.add(MaxPooling1D(pool_size=2))
