@@ -81,7 +81,7 @@ tokenizer = Tokenizer()
 # 使tokenizer对象识别要编码的数据信息，生成一个编码器
 tokenizer.fit_on_texts(docs)
 
-# 将训练文本编码为矩阵(one-hot code)，编码规则为按照词频编码
+# 将训练文本编码为矩阵，编码规则为按照词频编码
 Xtrain = tokenizer.texts_to_matrix(docs, mode='freq')
 # 测试集前900负面数据标记位0，后900正面数据标记位1
 ytrain = array([0 for _ in range(900)] + [1 for _ in range(900)])
