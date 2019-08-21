@@ -3,9 +3,11 @@ from keras.datasets import imdb
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import Flatten
+from keras.layers.convolutional import Conv1D
+from keras.layers.convolutional import MaxPooling1D
 from keras.layers.embeddings import Embedding
 from keras.preprocessing import sequence
-
+# load the dataset but only keep the top n words, zero the rest
 """
 在线下载的是已经被IMDB数字序列化之后的文本
 训练文本句子是转化好的数字序列，结果是0,1对应的情感标志
@@ -26,6 +28,8 @@ X_test = sequence.pad_sequences(X_test, maxlen=max_words)
 model = Sequential()
 # 嵌入层 权重矩阵大小为500*32 每次输入500个单词 每个word为向量32维 词汇表为5000
 model.add(Embedding(top_words, 32, input_length=max_words))
+model.add(Conv1D(filters=32, kernel_size=3, padding='same', activation='relu'))
+model.add(MaxPooling1D(pool_size=2))
 # 将嵌入层转换成一维输入
 model.add(Flatten())
 # 250节点 整流全连接层
@@ -35,7 +39,9 @@ model.add(Dense(1, activation='sigmoid'))
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 model.summary()
 # 数据量比较多，所以步长可设置为128
-model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=3, batch_size=128, verbose=2)
+model.fit(X_train, y_train, epochs=15, batch_size=128, verbose=2)
+# 将测试数据集代入训练（不建议）
+#model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=3, batch_size=128, verbose=2)
 # 评估
 scores = model.evaluate(X_test, y_test, verbose=0)
 print("Accuracy: %.2f%%" % (scores[1]*100))
