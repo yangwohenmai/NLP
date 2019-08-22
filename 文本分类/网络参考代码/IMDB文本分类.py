@@ -3,6 +3,9 @@
 
 TensorFlow 中包含 IMDB 数据集。我们已对该数据集进行了预处理，
 将影评（字词序列）转换为整数序列，其中每个整数表示字典中的一个特定字词。
+
+https://blog.csdn.net/Feynman1999/article/details/84292840
+
 '''
 import tensorflow as tf 
 from tensorflow import keras
