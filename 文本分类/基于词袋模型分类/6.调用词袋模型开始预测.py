@@ -107,7 +107,7 @@ docs = negative_lines + positive_lines
 Xtest = tokenizer.texts_to_matrix(docs, mode='freq')
 # 测试集前100负面数据标记位0，后100正面数据标记位1
 ytest = array([0 for _ in range(100)] + [1 for _ in range(100)])
-# 词向量长度，作为输入层节点个数
+# 每个词向量的维数
 n_words = Xtest.shape[1]
 # 定义网络
 model = Sequential()

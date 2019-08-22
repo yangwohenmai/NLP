@@ -71,7 +71,7 @@ train_docs = negative_docs + positive_docs
 
 # 创建一个分词器
 tokenizer = Tokenizer()
-# 使tokenizer对象识别要编码的数据信息，生成一个编码器
+# 使tokenizer对象对于文本中每个单词进行编码，每个单词对应一个数字
 tokenizer.fit_on_texts(train_docs)
 
 # sequence encode对文本单词进行索引编码，把文本中每一个单词对应一个整数索引
