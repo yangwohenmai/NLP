@@ -10,6 +10,18 @@ from keras.layers import Flatten
 from keras.layers import Embedding
 from keras.layers.convolutional import Conv1D
 from keras.layers.convolutional import MaxPooling1D
+"""
+本文训练一个简单的Embedding层，如果没有现成可用的嵌入层，就通过训练集数据来训练嵌入层
+1.用tokenizer.fit_on_texts()，对训练集文本进行编码，将每个单词对应一个数字索引（单词->数字索引）：tokenizer.word_index
+单词->数字索引， 形如：film:1,one:2,movie:3,like:4,or:5
+2.用tokenizer.texts_to_sequences()将训练集文本中的句子，转化为对应的数字索引序列：encoded_docs
+句子转化为数字序列， 形如：I like one film or movie... -> [?,4,2,1,5,3..] ?代表I对应的数字索引
+3.根据最大句长将句子长度对齐
+4.创建一个大小为(最大句长*100)的权重矩阵，作为嵌入层
+5.构建网络结构：嵌入->卷积->池化->平滑->分类
+6.将数字序列化后的训练数据，带入网络进行训练，反向传播更新嵌入层权重矩阵
+7.评估网络性能
+"""
 
 # 加载文件
 def load_doc(filename):

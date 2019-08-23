@@ -87,11 +87,11 @@ vocab = set(vocab)
 # 用词汇列表过滤和拼接 训练 数据
 positive_lines = process_docs(r'E:\临时测试程序\pytest\txt_sentoken\pos', vocab, True)
 negative_lines = process_docs(r'E:\临时测试程序\pytest\txt_sentoken\neg', vocab, True)
-# create the tokenizer
+# 创建一个分词器
 tokenizer = Tokenizer()
 # 将处理过的训练数据集组合起来
 docs = negative_lines + positive_lines
-# 使tokenizer对象识别要编码的数据类型
+# 使tokenizer对象对于文本中每个单词进行编码，每个单词对应一个数字
 tokenizer.fit_on_texts(docs)
 
 # 将训练文本编码为矩阵，编码规则为按照词频编码
