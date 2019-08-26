@@ -10,7 +10,7 @@ from nltk.corpus import stopwords
 import logging
 import jieba
 """
-https://blog.csdn.net/kingsonyoung/article/details/90545746
+https://blog.csdn.net/kingsonyoung/article/details/90545746 
 """
 
 class TextCNN(nn.Module):
