@@ -5,14 +5,17 @@ from keras.datasets import imdb
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import LSTM
+from keras.layers import Dropout
 from keras.layers.embeddings import Embedding
+from keras.layers.convolutional import Conv1D
+from keras.layers.convolutional import MaxPooling1D
 from keras.preprocessing import sequence
 from os import listdir
 from numpy import array
 # fix random seed for reproducibility
 numpy.random.seed(7)
 # load the dataset but only keep the top n words, zero the rest
-top_words = 5000
+top_words = 10000
 (X_train, y_train), (X_test, y_test) = imdb.load_data(num_words=top_words)
 
 # 特殊符号处理
@@ -31,7 +34,8 @@ def text_to_index(text, change_word_index):
     try:
         ll = list()
         ll.append(1)
-        ll.extend([change_word_index.get(word,0) for word in text])
+        # ll.extend([change_word_index.get(word,0) for word in text])
+        ll.extend([change_word_index.get(word,0) for word in text if change_word_index.get(word,0) < 10000])
         #llarray = numpy.asarray(ll, dtype = int)
         #string = ' '.join('%s' %id for id in ll)
     except Exception as e:
@@ -87,15 +91,15 @@ def process_docs(directory, is_trian):
     return numpy.asarray(documents)
 
 # 加载生成好的词汇列表vocab
-vocab_filename = r'D:\MyGit\NLP\文本分类\LSTM_IMDB文本分类\vocab2.txt'
+vocab_filename = r'E:\MyGit\NLP\文本分类\IMDB_LSTM文本分类\vocab2.txt'
 vocab = load_doc(vocab_filename)
 vocab = vocab.split()
 vocab = set(vocab)
 
 
-xtrain_pos = process_docs(r'D:\MyGit\NLP\文本分类\基于word2vec词向量分类\txt_sentoken/pos', True)
-xtrain_neg = process_docs(r'D:\MyGit\NLP\文本分类\基于word2vec词向量分类\txt_sentoken/neg', True)
-xtrain = xtrain_neg.extend(xtrain_pos)
+xtrain_pos = process_docs(r'E:\MyGit\NLP\文本分类\IMDB_LSTM文本分类\txt_sentoken/pos', True)
+xtrain_neg = process_docs(r'E:\MyGit\NLP\文本分类\IMDB_LSTM文本分类\txt_sentoken/neg', True)
+xtrain = numpy.concatenate((xtrain_neg,xtrain_pos),axis=0)
 ytrain = array([0 for _ in range(900)] + [1 for _ in range(900)])
 
 # truncate and pad input sequences
@@ -107,12 +111,14 @@ X_test = sequence.pad_sequences(X_test, maxlen=max_review_length)
 embedding_vecor_length = 32
 model = Sequential()
 model.add(Embedding(top_words, embedding_vecor_length, input_length=max_review_length))
+model.add(Conv1D(filters=32, kernel_size=3, padding='same', activation='relu'))
+model.add(MaxPooling1D(pool_size=2))
 model.add(LSTM(100))
 model.add(Dense(1, activation='sigmoid'))
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 print(model.summary())
 #model.fit(X_train, y_train, epochs=3, batch_size=64)
-model.fit(xtrain, ytrain, epochs=3, batch_size=64)
+model.fit(xtrain, ytrain, epochs=15, batch_size=64)
 # Final evaluation of the model
 scores = model.evaluate(X_test, y_test, verbose=0)
 print("Accuracy: %.2f%%" % (scores[1]*100))
