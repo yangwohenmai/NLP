@@ -37,7 +37,7 @@ word_index["<UNUSED>"] = 3
 # 获取“单词-数字”对应字典
 change_word_index = dict([(key, value) for (key, value) in word_index.items()])
 # 获取“数字-单词”对应字典
-change_word_index = dict([(value, key) for (key, value) in word_index.items()])
+# change_word_index = dict([(value, key) for (key, value) in word_index.items()])
 
 # 将文本转化为数字
 def text_to_index(text, change_word_index):
@@ -95,18 +95,22 @@ def process_docs(directory, is_trian):
     return numpy.asarray(documents)
 
 
+vocab_filename = r'E:\MyGit\NLP\文本分类\IMDB_LSTM+X 4种文本分类\vocab2.txt'
+vocab = load_doc(vocab_filename)
+vocab = vocab.split()
+vocab = set(vocab)
 
 # 根据IMDB的“单词-索引”字典，将训练文本转换为数字索引
-xtrain_pos = process_docs(r'E:\MyGit\NLP\文本分类\IMDB_LSTM文本分类\txt_sentoken/pos', True)
-xtrain_neg = process_docs(r'E:\MyGit\NLP\文本分类\IMDB_LSTM文本分类\txt_sentoken/neg', True)
+xtrain_pos = process_docs(r'E:\MyGit\NLP\文本分类\IMDB_LSTM+X 4种文本分类\txt_sentoken/pos', True)
+xtrain_neg = process_docs(r'E:\MyGit\NLP\文本分类\IMDB_LSTM+X 4种文本分类\txt_sentoken/neg', True)
 # 训练数据合并
 xtrain = numpy.concatenate((xtrain_neg,xtrain_pos),axis=0)
 # 制造评价数据
 ytrain = array([0 for _ in range(900)] + [1 for _ in range(900)])
 
 # 准备测试数据
-xtest_pos = process_docs(r'E:\MyGit\NLP\文本分类\IMDB_LSTM文本分类\txt_sentoken/pos', False)
-xtest_neg = process_docs(r'E:\MyGit\NLP\文本分类\IMDB_LSTM文本分类\txt_sentoken/neg', False)
+xtest_pos = process_docs(r'E:\MyGit\NLP\文本分类\IMDB_LSTM+X 4种文本分类\txt_sentoken/pos', False)
+xtest_neg = process_docs(r'E:\MyGit\NLP\文本分类\IMDB_LSTM+X 4种文本分类\txt_sentoken/neg', False)
 xtest = numpy.concatenate((xtest_neg,xtest_pos),axis=0)
 ytest = array([0 for _ in range(100)] + [1 for _ in range(100)])
 
@@ -117,15 +121,11 @@ xtrain = sequence.pad_sequences(xtrain, maxlen=max_review_length)
 # 对齐测试数据
 xtest = sequence.pad_sequences(xtest, maxlen=max_review_length)
 
-# 创建网络
+# 词向量维度
 embedding_vecor_length = 32
 model = Sequential()
-# 嵌入层 参数：词汇数量，嵌入层神经元数量，每条评论句长
+# 嵌入层 参数：词汇数量，句中每个单词的向量维度32，每条评论句长500
 model.add(Embedding(top_words, embedding_vecor_length, input_length=max_review_length))
-# 一维卷积提取特征，32个卷积核，取词窗口为3，补零策略same（查阅kers笔记），整流激活函数
-model.add(Conv1D(filters=32, kernel_size=3, padding='same', activation='relu'))
-# 池化层
-model.add(MaxPooling1D(pool_size=2))
 model.add(LSTM(100))
 # 分类输出
 model.add(Dense(1, activation='sigmoid'))

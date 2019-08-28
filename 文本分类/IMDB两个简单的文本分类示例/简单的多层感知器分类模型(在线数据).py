@@ -38,6 +38,7 @@ model.summary()
 model.fit(X_train, y_train, epochs=3, batch_size=128, verbose=2)
 # validation_data=(X_test, y_test)，将测试数据集代入训练（不建议）
 #model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=3, batch_size=128, verbose=2)
+model.fit(X_train, y_train, epochs=3, batch_size=128, verbose=2)
 # 评估
 scores = model.evaluate(X_test, y_test, verbose=0)
 print("Accuracy: %.2f%%" % (scores[1]*100))
