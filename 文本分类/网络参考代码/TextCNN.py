@@ -232,4 +232,3 @@ if __name__ == "__main__":
     torch.save(net, net_dir)
     logging.info("开始测试模型")
     textcnn_model_test(net, test_dataloader)
-
