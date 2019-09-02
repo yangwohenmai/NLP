@@ -1,4 +1,7 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
+"""
+传说中的IF-IDF分词法，通过词频，计算词汇得分，构造词向量
+"""
 # 下面是一个文本文档的列表
 text = ["The quick brown fox jumped over the lazy dog.",
         "The dog.",
