@@ -1,0 +1,1 @@
+httpsmachinelearningmastery.comuse-word-embedding-layers-deep-learning-keras
