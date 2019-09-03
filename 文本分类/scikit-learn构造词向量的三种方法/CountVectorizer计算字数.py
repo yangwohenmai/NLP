@@ -12,13 +12,13 @@ eg:
 转换前的文本：text = bcfadde
 转换后的向量：vec = [1,1,1,2,1,1,0]  (2代表d出现2次，0代表g没出现过，1代表出现过一次的单词)
 """
-# list of text documents
+# 待转换文本
 text = ["The quick brown fox jumped over the lazy dog."]
-# 创建一个CountVectorizer词向量构建法对象
+# 创建一个基于CountVectorizer的，词向量构建法对象
 vectorizer = CountVectorizer()
 # 使用CountVectorizer构造出 “单词-索引” 字典
 vectorizer.fit(text)
-# 输出字典
+# 输出构造出的字典
 print(vectorizer.vocabulary_)
 # 使用 “单词-索引” 字典，将换文本数据转换成数字序列
 vector = vectorizer.transform([text[0]])
