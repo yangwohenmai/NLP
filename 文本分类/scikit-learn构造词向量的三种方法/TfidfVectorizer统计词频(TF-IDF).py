@@ -4,6 +4,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 词频（Term Frequency）：表示给定单词在这份文档中出现的频率。
 逆向文件频率（Inverse Document Frequency）：用于降低其他文档中普遍出现的单词的最终评分。
 TF-IDF可以突出个性化的单词，例如在只在这份文档中频繁出现，但其他文档中较少出现的单词
+https://machinelearningmastery.com/prepare-text-data-machine-learning-scikit-learn/
 """
 # 下面是一个文本文档的列表
 text = ["The quick brown fox jumped over the lazy dog.",

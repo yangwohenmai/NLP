@@ -11,6 +11,7 @@ eg:
 单词-索引 字典： dic：{a:1,b:2,c:3,d:4,e:5,:f:6,g:7}
 转换前的文本：text = bcfadde
 转换后的向量：vec = [1,1,1,2,1,1,0]  (2代表d出现2次，0代表g没出现过，1代表出现过一次的单词)
+https://machinelearningmastery.com/prepare-text-data-machine-learning-scikit-learn/
 """
 # 待转换文本
 text = ["The quick brown fox jumped over the lazy dog."]
