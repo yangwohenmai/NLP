@@ -14,6 +14,7 @@ from keras.layers.embeddings import Embedding
 3.调用pad_sequences(),将编码后的向量补全成相同长度
 4.构建网络训练Embedding层
 5.训练得到Embedding层的权重矩阵就是嵌入层参数
+https://machinelearningmastery.com/use-word-embedding-layers-deep-learning-keras/
 """
 # 10个文本
 docs = ['Well done!',
