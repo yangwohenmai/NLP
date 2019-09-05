@@ -7,6 +7,14 @@ from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import Flatten
 from keras.layers import Embedding
+"""
+文章内容：
+本文实现了，使用已经训练好的词向量glove，直接将doc文本转换为词向量矩阵embedding_matrix
+使用weights=[embedding_matrix]，将转换好的词向量矩阵embedding_matrix直接代入Embedding层，而不用再对Embedding层的权重矩阵进行训练
+用trainable=False表示训练网络的过程中，不对Embedding层的embedding_matrix矩阵的值进行修改
+https://machinelearningmastery.com/use-word-embedding-layers-deep-learning-keras/
+
+"""
 # define documents
 docs = ['Well done!',
 		'Good work',
