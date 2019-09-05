@@ -40,10 +40,11 @@ movie:3....
 8.设置损失函数等，训练网络等，评估网络准确度等
 
 本文重点：
+该方法利用训练好的词向量raw_embedding，对文本tokenizer.word_index进行转换
 embedding_vectors = get_weight_matrix(raw_embedding, tokenizer.word_index)
-# 用训练集文本生成的权重矩阵，构建 词嵌入层embedding_layer，trainable=False表示训练过程中不对嵌入层权重进行调整
-
+weights=[embedding_vectors]表示将转换后的词向量直接代入嵌入层作为权重矩阵，trainable=False表示训练过程中不再对代入的矩阵修正
 embedding_layer = Embedding(vocab_size, 100, weights=[embedding_vectors], input_length=max_length, trainable=False)
+这样就可以直接使用训练好的词向量作为嵌入层的权重矩阵
 """
 
 # load doc into memory
