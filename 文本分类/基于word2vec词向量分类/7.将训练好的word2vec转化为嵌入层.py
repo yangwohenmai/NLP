@@ -38,6 +38,12 @@ movie:3....
 6.将权重矩阵构建成嵌入层结构：embedding_layer
 7.构建网络模型：嵌入层->卷积层->池化层->平滑层->分类层
 8.设置损失函数等，训练网络等，评估网络准确度等
+
+本文重点：
+embedding_vectors = get_weight_matrix(raw_embedding, tokenizer.word_index)
+# 用训练集文本生成的权重矩阵，构建 词嵌入层embedding_layer，trainable=False表示训练过程中不对嵌入层权重进行调整
+
+embedding_layer = Embedding(vocab_size, 100, weights=[embedding_vectors], input_length=max_length, trainable=False)
 """
 
 # load doc into memory
@@ -98,9 +104,9 @@ def load_embedding(filename):
 
 # 根据word2vec中(单词->向量)的映射关系，将训练集中文本，转化为一个嵌入层权重矩阵
 def get_weight_matrix(embedding, train_text_index):
-	# total vocabulary size plus 0 for unknown words
+	# 词汇量+1
 	vocab_size = len(train_text_index) + 1
-	# 为训练集文本中每个单词创建一个0向量，每个向量为100维,组成一个vocab_size*100的矩阵
+	# 为训练集文本中每个单词创建一个0向量矩阵，每个向量为100维,组成一个vocab_size*100的矩阵
     # 形如：[[0,0...,0,0],[0,0...,0,0],...[0,0...,0,0]]
 	weight_matrix = zeros((vocab_size, 100))
 	# 根据word2vec文件的(单词->向量)映射关系字典,将训练集的文本 构建成 嵌入层的权重矩阵
@@ -155,8 +161,10 @@ vocab_size = len(tokenizer.word_index) + 1
 # 加载训练好的词嵌入文件word2vec.txt，生成一个(单词->向量)映射关系字典
 raw_embedding = load_embedding(r'E:\MyGit\NLP\文本分类\基于word2vec词向量分类\embedding_word2vec.txt')
 # 通过使用word2vec文件生成的(单词->向量)影射关系字典，与训练集文本中的单词 匹配其对应的向量，将训练集文本 转化成一个由向量构成的 权重矩阵
+# raw_embedding是训练好的词向量，tokenizer.word_index是带转换的文本
 embedding_vectors = get_weight_matrix(raw_embedding, tokenizer.word_index)
 # 用训练集文本生成的权重矩阵，构建 词嵌入层embedding_layer，trainable=False表示训练过程中不对嵌入层权重进行调整
+# embedding_vectors是通过训练好的词向量转换成的文本
 embedding_layer = Embedding(vocab_size, 100, weights=[embedding_vectors], input_length=max_length, trainable=False)
 
 # 定义训练模型
