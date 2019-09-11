@@ -13,7 +13,12 @@ from keras.layers.convolutional import Conv1D
 from keras.layers.convolutional import MaxPooling1D
 from keras.layers.merge import concatenate
 from keras.models import load_model
-
+"""
+对于多通道CNN网络来说，通过设置多个不同参数的通道，对同一批数据进行训练
+kernel_size参数定义了分析单膝语义是，要考虑该单词周围的单次数量，类似n-gram
+不同通道之间，一维卷积层kernel_size参数设置不同，则卷积层提取文本特征时取词窗口大小不同
+模型可以使用不同的取词窗口来分析单词语义，并从中更好的学习
+"""
 # load a clean dataset
 def load_dataset(filename):
 	return load(open(filename, 'rb'))
