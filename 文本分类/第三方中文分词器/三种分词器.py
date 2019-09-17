@@ -2,7 +2,9 @@ import os
 #import jieba
 import pkuseg
 #from pyltp import Segmentor
-
+"""
+https://www.cnblogs.com/chen8023miss/p/11447141.html
+"""
 lexicon = ['经', '少安', '贺凤英', 'F-35战斗机', '埃达尔·阿勒坎'] # 自定义词典
 
 # 哈工大LTP分词
