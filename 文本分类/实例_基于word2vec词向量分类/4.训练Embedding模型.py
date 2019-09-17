@@ -22,7 +22,6 @@ from keras.layers.convolutional import MaxPooling1D
 6.将数字序列化后的训练数据，带入网络进行训练，反向传播更新嵌入层权重矩阵
 7.评估网络性能
 """
-
 # 加载文件
 def load_doc(filename):
 	# open the file as read only
@@ -70,14 +69,14 @@ def process_docs(directory, vocab, is_trian):
 
 
 # 加载生成好的词汇列表vocab
-vocab_filename = r'E:\MyGit\NLP\文本分类\基于word2vec词向量分类\vocab.txt'
+vocab_filename = r'E:\MyGit\NLP\文本分类\实例_基于word2vec词向量分类\vocab.txt'
 vocab = load_doc(vocab_filename)
 vocab = vocab.split()
 vocab = set(vocab)
 
 # 用词汇列表过滤和拼接 训练 数据
-positive_docs = process_docs(r'E:\MyGit\NLP\文本分类\基于word2vec词向量分类\txt_sentoken/pos', vocab, True)
-negative_docs = process_docs(r'E:\MyGit\NLP\文本分类\基于word2vec词向量分类\txt_sentoken/neg', vocab, True)
+positive_docs = process_docs(r'E:\MyGit\NLP\文本分类\实例_基于word2vec词向量分类\txt_sentoken/pos', vocab, True)
+negative_docs = process_docs(r'E:\MyGit\NLP\文本分类\实例_基于word2vec词向量分类\txt_sentoken/neg', vocab, True)
 # 将处理过的(正面/负面)训练数据集组合起来
 train_docs = negative_docs + positive_docs
 
@@ -86,39 +85,41 @@ tokenizer = Tokenizer()
 # 使tokenizer对象对于文本中每个单词进行编码，每个单词对应一个数字
 tokenizer.fit_on_texts(train_docs)
 
-# sequence encode对文本单词进行索引编码，把文本中每一个单词对应一个整数索引
+# 对文本单词进行索引编码，把文本中每一个单词转化成一个整数，文本变成了数字序列
+# 12,3,23,45,23,45
 encoded_docs = tokenizer.texts_to_sequences(train_docs)
 # 获取列表中最大句子长度
 max_length = max([len(s.split()) for s in train_docs])
-# 对编码后的文本列表中不同长度的句子，用0填充到相同长度
+# 对编码后的文本列表中不同长度的句子，用0填充到相同长度（对齐）
 Xtrain = pad_sequences(encoded_docs, maxlen=max_length, padding='post')
 # 测试集前900负面数据标记位0，后900正面数据标记位1
 ytrain = array([0 for _ in range(900)] + [1 for _ in range(900)])
 
 
 # 用词汇列表过滤和拼接 测试 数据
-positive_docs = process_docs(r'E:\MyGit\NLP\文本分类\基于word2vec词向量分类\txt_sentoken/pos', vocab, False)
-negative_docs = process_docs(r'E:\MyGit\NLP\文本分类\基于word2vec词向量分类\txt_sentoken/neg', vocab, False)
+positive_docs = process_docs(r'E:\MyGit\NLP\文本分类\实例_基于word2vec词向量分类\txt_sentoken/pos', vocab, False)
+negative_docs = process_docs(r'E:\MyGit\NLP\文本分类\实例_基于word2vec词向量分类\txt_sentoken/neg', vocab, False)
 test_docs = negative_docs + positive_docs
 
-# sequence encode对文本单词进行索引编码，把文本中每一个单词对应一个整数索引
+# 对文本单词进行索引编码，把文本中每一个单词转化成一个整数，文本变成了数字序列
+# 句子变成了数字序列：12,3,23,45,23,45
 # 使用训练集的tokenizer分词器，来编码测试集文本
 encoded_docs = tokenizer.texts_to_sequences(test_docs)
-# 对编码后的文本列表中不同长度的句子，用0填充到相同长度
+# 对编码后的文本列表中不同长度的句子，用0填充到相同长度（对齐）
 Xtest = pad_sequences(encoded_docs, maxlen=max_length, padding='post')
 # 测试集前100负面数据标记位0，后100正面数据标记位1
 ytest = array([0 for _ in range(100)] + [1 for _ in range(100)])
 
-# 定义词汇量大小=训练集总词汇量+1
+# 定义词汇量大小=总词汇量+1
 vocab_size = len(tokenizer.word_index) + 1
 
 # 定义网络
 model = Sequential()
 # 词嵌入层作为第一个隐藏层。参数：词汇量大小，每个word向量为100维，输入文本最大长度
 model.add(Embedding(vocab_size, 100, input_length=max_length))
-# 使用一维CNN卷积神经网络，32个滤波器，激活函数为relu，卷积核数量为4
+# 使用一维CNN卷积神经网络，32个滤波器，激活函数为relu，卷积核数量为8
 # 一维卷积一般会处理时序数据，所以，卷积核的宽度为1，kernel_size是卷积核的长度
-model.add(Conv1D(filters=32, kernel_size=4, activation='relu'))
+model.add(Conv1D(filters=32, kernel_size=8, activation='relu'))
 # 池化层
 model.add(MaxPooling1D(pool_size=2))
 # 将CNN输出的2D输出展平为一个长2D矢量，以表示由CNN提取的“特征”
@@ -136,19 +137,3 @@ model.fit(Xtrain, ytrain, epochs=10, verbose=2)
 # 用测试集评估网络准确度
 loss, acc = model.evaluate(Xtest, ytest, verbose=0)
 print('Test Accuracy: %f' % (acc*100))
-
-# 调用训练的模型进行分类测试
-# test positive text
-text = 'best movie ever! i like it very much, haha'
-line = clean_doc(text,vocab)
-encoded_docs = tokenizer.texts_to_sequences([line])
-Xhat = pad_sequences(encoded_docs, maxlen=max_length, padding='post')
-yhat = model.predict(Xhat,verbose=2)
-print(round(yhat[0,0]))
-# test negative text
-text = 'this is a bad movie.i dont want see it again'
-line = clean_doc(text,vocab)
-encoded_docs = tokenizer.texts_to_sequences([line])
-Xhat = pad_sequences(encoded_docs, maxlen=max_length, padding='post')
-yhat = model.predict(Xhat,verbose=2)
-print(round(yhat[0,0]))

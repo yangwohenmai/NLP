@@ -117,14 +117,14 @@ def get_weight_matrix(embedding, train_text_index):
 	return weight_matrix
 
 # 加载生成好的词汇列表vocab
-vocab_filename = r'E:\MyGit\NLP\文本分类\基于word2vec词向量分类\vocab.txt'
+vocab_filename = r'E:\MyGit\NLP\文本分类\实例_基于word2vec词向量分类\vocab.txt'
 vocab = load_doc(vocab_filename)
 vocab = vocab.split()
 vocab = set(vocab)
 
 # 用词汇列表过滤和拼接 训练 数据
-positive_docs = process_docs(r'E:\MyGit\NLP\文本分类\基于word2vec词向量分类\txt_sentoken/pos', vocab, True)
-negative_docs = process_docs(r'E:\MyGit\NLP\文本分类\基于word2vec词向量分类\txt_sentoken/neg', vocab, True)
+positive_docs = process_docs(r'E:\MyGit\NLP\文本分类\实例_基于word2vec词向量分类\txt_sentoken/pos', vocab, True)
+negative_docs = process_docs(r'E:\MyGit\NLP\文本分类\实例_基于word2vec词向量分类\txt_sentoken/neg', vocab, True)
 # 将处理过的(正面/负面)训练数据集组合起来
 train_docs = negative_docs + positive_docs
 
@@ -144,8 +144,8 @@ Xtrain = pad_sequences(encoded_docs, maxlen=max_length, padding='post')
 ytrain = array([0 for _ in range(900)] + [1 for _ in range(900)])
 
 # 用词汇列表过滤和拼接 测试 数据
-positive_docs = process_docs(r'E:\MyGit\NLP\文本分类\基于word2vec词向量分类\txt_sentoken/pos', vocab, False)
-negative_docs = process_docs(r'E:\MyGit\NLP\文本分类\基于word2vec词向量分类\txt_sentoken/neg', vocab, False)
+positive_docs = process_docs(r'E:\MyGit\NLP\文本分类\实例_基于word2vec词向量分类\txt_sentoken/pos', vocab, False)
+negative_docs = process_docs(r'E:\MyGit\NLP\文本分类\实例_基于word2vec词向量分类\txt_sentoken/neg', vocab, False)
 test_docs = negative_docs + positive_docs
 
 # 对文本单词进行索引编码，把文本中每一个单词转化成一个整数，文本变成了数字序列
@@ -160,7 +160,7 @@ ytest = array([0 for _ in range(100)] + [1 for _ in range(100)])
 vocab_size = len(tokenizer.word_index) + 1
 
 # 加载训练好的词嵌入文件word2vec.txt，生成一个(单词->向量)映射关系字典
-raw_embedding = load_embedding(r'E:\MyGit\NLP\文本分类\基于word2vec词向量分类\embedding_word2vec.txt')
+raw_embedding = load_embedding(r'E:\MyGit\NLP\文本分类\实例_基于word2vec词向量分类\embedding_word2vec.txt')
 # 通过使用word2vec文件生成的(单词->向量)影射关系字典，与训练集文本中的单词 匹配其对应的向量，将训练集文本 转化成一个由向量构成的 权重矩阵
 # raw_embedding是训练好的词向量，tokenizer.word_index是带转换的文本
 embedding_vectors = get_weight_matrix(raw_embedding, tokenizer.word_index)

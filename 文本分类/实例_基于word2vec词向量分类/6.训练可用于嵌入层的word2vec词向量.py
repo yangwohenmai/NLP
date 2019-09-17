@@ -56,14 +56,14 @@ def process_docs(directory, vocab, is_trian):
     return lines
 
 # 加载词汇文件
-vocab_filename = r'E:\MyGit\NLP\文本分类\基于word2vec词向量分类\vocab.txt'
+vocab_filename = r'E:\MyGit\NLP\文本分类\实例_基于word2vec词向量分类\vocab.txt'
 vocab = load_doc(vocab_filename)
 vocab = vocab.split()
 vocab = set(vocab)
 
 # 加载训练数据
-positive_docs = process_docs(r'E:\MyGit\NLP\文本分类\基于word2vec词向量分类\txt_sentoken/pos', vocab, True)
-negative_docs = process_docs(r'E:\MyGit\NLP\文本分类\基于word2vec词向量分类\txt_sentoken/neg', vocab, True)
+positive_docs = process_docs(r'E:\MyGit\NLP\文本分类\实例_基于word2vec词向量分类\txt_sentoken/pos', vocab, True)
+negative_docs = process_docs(r'E:\MyGit\NLP\文本分类\实例_基于word2vec词向量分类\txt_sentoken/neg', vocab, True)
 sentences = negative_docs + positive_docs
 print('训练数据总数量为: %d' % len(sentences))
 
@@ -75,7 +75,7 @@ words = list(model.wv.vocab)
 print('Vocabulary size: %d' % len(words))
 
 # 保存训练的词向量文件
-filename = r'E:\MyGit\NLP\文本分类\基于word2vec词向量分类\embedding_word2vec.txt'
+filename = r'E:\MyGit\NLP\文本分类\实例_基于word2vec词向量分类\embedding_word2vec.txt'
 model.wv.save_word2vec_format(filename, binary=False)
 
 
